@@ -3,39 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrator</title>
+    <title>Registrador</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
 </head>
 <body>
-    <h1>Registrator</h1>
 
-    <!-- Formulário para adicionar um novo registro -->
-    <form id="registrationForm">
-        <label for="ip">IP:</label>
-        <input type="text" id="ip" name="ip" required><br><br>
+    <main class="col-9 mb-5 p-5 pt-1">
+        <h2 class="mb-5">Registrador</h2>
 
-        <label for="campus">Campus:</label>
-        <input type="text" id="campus" name="campus" required><br><br>
+        <!-- Formulário para adicionar um novo registro -->
+        <form id="registrationForm">
 
-        <button type="submit">Adicionar Registro</button>
-    </form>
+            <div class="col-6 mb-4">
+                <label for="basic-url" class="form-label">Endereço firewall</label>
+                <div class="input-group">
+                    <span class="input-group-text" id="basic-addon3">http://</span>
+                    <input type="text" class="form-control" id="ip" name="ip" required aria-describedby="basic-addon3 basic-addon4">
+                </div>
+            </div>
 
-    <hr>
+            <div class="col-6 mb-4">
+                <div class="form-floating">
+                    <select class="form-select" id="campus" name="campus" required aria-label="Floating label select example">
+                        <option selected>Selecionar</option>
+                        <option value="Cuiabá - Octayde Jorge da Silva">Cuiabá - Octayde Jorge da Silva</option>
+                        <option value="São Vicente">São Vicente</option>
+                        <option value="Cáceres - Professor Olegário Baldo">Cáceres - Professor Olegário Baldo</option>
+                        <option value="Cuiabá - Bela Vista">Cuiabá - Bela Vista</option>
+                        <option value="Pontes e Lacerda - Fronteira Oeste">Pontes e Lacerda - Fronteira Oeste</option>
+                        <option value="Campo Novo do Parecis">Campo Novo do Parecis</option>
+                        <option value="Juína">Juína</option>
+                        <option value="Confresa">Confresa</option>
+                        <option value="Rondonópolis">Rondonópolis</option>
+                        <option value="Sorriso">Sorriso</option>
+                        <option value="Várzea Grande">Várzea Grande</option>
+                        <option value="Barra do Garças">Barra do Garças</option>
+                        <option value="Primavera do Leste">Primavera do Leste</option>
+                        <option value="Alta Floresta">Alta Floresta</option>
+                        <option value="(A) Tangará da Serra">(A) Tangará da Serra</option>
+                        <option value="(A) Diamantino">(A) Diamantino</option>
+                        <option value="(A) Lucas do Rio Verde">(A) Lucas do Rio Verde</option>
+                        <option value="(A) Sinop">(A) Sinop</option>
+                        <option value="(A) Guarantã do Norte">(A) Guarantã do Norte</option>                 
+                    </select>
+                    <label for="floatingSelect">Campus</label>
+                </div>
+            </div>                       
 
-    <!-- Tabela para exibir registros existentes -->
-    <h2>Registros:</h2>
-    <table id="registrationsTable">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>IP</th>
-                <th>Campus</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Os registros serão preenchidos dinamicamente aqui -->
-        </tbody>
-    </table>
+            <button type="submit" class="btn btn-primary">Adicionar</button>
+        </form>
+
+        <hr>
+
+        <!-- Tabela para exibir registros existentes -->
+        <br>
+        <table id="registrationsTable" class="table table-striped col-sm">
+            <thead>
+                <tr>
+                    <th>Endereço</th>
+                    <th>Campus</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Os registros serão preenchidos dinamicamente aqui -->
+            </tbody>
+        </table>
+    </main>
 
     <script>
         // Função para carregar os registros existentes ao carregar a página
@@ -74,6 +110,8 @@
             })
             .then(data => {
                 alert(data.message);
+                document.getElementById('ip').value = "";
+                document.getElementById('campus').value = "";
                 fetchRegistrations(); // Recarrega a lista de registros
             })
             .catch(error => {
@@ -92,11 +130,10 @@
                 data.forEach(function(registration) {
                     var row = tableBody.insertRow();
                     row.innerHTML = `
-                        <td>${registration.id}</td>
-                        <td>${registration.ip}</td>
+                        <td> <a href="http://${registration.ip}/php/login.php" target="_blank"> ${registration.ip} </td>
                         <td>${registration.campus}</td>
-                        <td>
-                            <button onclick="deleteRegistration(${registration.id})">Excluir</button>
+                        <td>                            
+                            <i onclick="deleteRegistration(${registration.id})" class="fa-solid fa-trash-can btn-danger" style="color: #e30202;"></i>
                         </td>
                     `;
                 });
@@ -128,5 +165,8 @@
             }
         }
     </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/5b791e45ff.js" crossorigin="anonymous"></script>
 </body>
 </html>
