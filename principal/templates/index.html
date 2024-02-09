@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrator</title>
+</head>
+<body>
+    <h1>Registrator</h1>
+
+    <!-- Formulário para adicionar um novo registro -->
+    <form id="registrationForm">
+        <label for="ip">IP:</label>
+        <input type="text" id="ip" name="ip" required><br><br>
+
+        <label for="campus">Campus:</label>
+        <input type="text" id="campus" name="campus" required><br><br>
+
+        <button type="submit">Adicionar Registro</button>
+    </form>
+
+    <hr>
+
+    <!-- Tabela para exibir registros existentes -->
+    <h2>Registros:</h2>
+    <table id="registrationsTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>IP</th>
+                <th>Campus</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Os registros serão preenchidos dinamicamente aqui -->
+        </tbody>
+    </table>
+
+    <script>
+        // Função para carregar os registros existentes ao carregar a página
+        window.onload = function() {
+            fetchRegistrations();
+        };
+
+        // Função para enviar dados do formulário e adicionar um novo registro
+        document.getElementById('registrationForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Obter os valores dos campos do formulário
+            var ip = document.getElementById('ip').value;
+            var campus = document.getElementById('campus').value;
+
+            var formData = new FormData(this);
+            formData.append('ip', ip);
+            formData.append('campus', campus);
+
+            console.log('ip', ip);
+            console.log('campus', campus);
+
+            fetch('/add', {
+                headers : {'Content-Type' : 'application/json'},                
+                method : 'POST',
+                body : JSON.stringify( {  
+                        'ip' : ip,
+                        'campus': campus
+                    })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Falha ao adicionar registro');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message);
+                fetchRegistrations(); // Recarrega a lista de registros
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+            });
+        });
+
+        // Função para buscar e exibir os registros existentes
+        function fetchRegistrations() {
+            fetch('/registrator')
+            .then(response => response.json())
+            .then(data => {
+                var tableBody = document.getElementById('registrationsTable').getElementsByTagName('tbody')[0];
+                tableBody.innerHTML = ''; // Limpa a tabela antes de preencher
+
+                data.forEach(function(registration) {
+                    var row = tableBody.insertRow();
+                    row.innerHTML = `
+                        <td>${registration.id}</td>
+                        <td>${registration.ip}</td>
+                        <td>${registration.campus}</td>
+                        <td>
+                            <button onclick="deleteRegistration(${registration.id})">Excluir</button>
+                        </td>
+                    `;
+                });
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+            });
+        }
+
+        // Função para excluir um registro
+        function deleteRegistration(id) {
+            if (confirm('Tem certeza que deseja excluir este registro?')) {
+                fetch(`/registrator/${id}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Falha ao excluir registro');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    alert(data.message);
+                    fetchRegistrations(); // Recarrega a lista de registros
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                });
+            }
+        }
+    </script>
+</body>
+</html>

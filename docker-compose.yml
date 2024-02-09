@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+
+  database:
+    image: postgres:16.1-bullseye
+    ports:
+      - "5432:5432"  # Mapeamento da porta do container para a máquina host
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - postgres_data:/var/lib/postgresql/data      
+
+  principal:
+    build:
+      context: ./principal
+    ports:
+      - "8000:8000"  # Mapeamento da porta do container para a máquina host
+    depends_on:
+      - database
+    environment:
+      - DATABASE_URL=postgresql://postgres:mypassword@database:5432/mydatabase
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8001:8080
+
+volumes:
+  postgres_data:
