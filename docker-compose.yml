@@ -5,7 +5,7 @@ services:
   database:
     image: postgres:16.1-bullseye
     ports:
-      - "5432:5432"  # Mapeamento da porta do container para a máquina host
+      - "5432:5432"  
     environment:
       POSTGRES_DB: mydatabase
       POSTGRES_USER: postgres
@@ -17,7 +17,7 @@ services:
     build:
       context: ./principal
     ports:
-      - "8000:8000"  # Mapeamento da porta do container para a máquina host
+      - "8000:8000"  
     depends_on:
       - database
     environment:

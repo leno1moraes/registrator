@@ -4,18 +4,14 @@ import psycopg2
 
 app = Flask(__name__)
 
-# Configurações do banco de dados
+
 DATABASE_URL = "postgresql://postgres:mypassword@database:5432/mydatabase"
 
-# Definindo o caminho para o arquivo index.html
-# INDEX_HTML_PATH = os.path.join('..', 'frontend', 'index.html')
 
-# Conexão com o banco de dados
 def get_db_connection():
     conn = psycopg2.connect(DATABASE_URL)
     return conn
 
-# Criar a tabela 'registrator' se ela não existir
 def create_table():
     conn = get_db_connection()
     cur = conn.cursor()
@@ -59,17 +55,17 @@ def get_all_registrators():
     return jsonify(registrators), 200
 
 # Rota para atualizar um registro existente
-@app.route('/registrator/<int:id>', methods=['PUT'])
-def update_registrator(id):
-    data = request.get_json()
-    ip = data['ip']
-    campus = data['campus']
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute("UPDATE registrator SET ip = %s, campus = %s WHERE id = %s", (ip, campus, id))
-    conn.commit()
-    conn.close()
-    return jsonify({'message': 'Registro atualizado com sucesso'}), 200
+# @app.route('/registrator/<int:id>', methods=['PUT'])
+# def update_registrator(id):
+#     data = request.get_json()
+#     ip = data['ip']
+#     campus = data['campus']
+#     conn = get_db_connection()
+#     cur = conn.cursor()
+#     cur.execute("UPDATE registrator SET ip = %s, campus = %s WHERE id = %s", (ip, campus, id))
+#     conn.commit()
+#     conn.close()
+#     return jsonify({'message': 'Registro atualizado com sucesso'}), 200
 
 # Rota para excluir um registro existente
 @app.route('/registrator/<int:id>', methods=['DELETE'])
