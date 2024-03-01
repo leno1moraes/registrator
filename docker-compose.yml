@@ -4,8 +4,9 @@ services:
 
   database:
     image: postgres:16.1-bullseye
+    restart: always
     ports:
-      - "5432:5432"  
+      - "8432:5432"  
     environment:
       POSTGRES_DB: mydatabase
       POSTGRES_USER: postgres
@@ -16,12 +17,13 @@ services:
   principal:
     build:
       context: ./principal
+    restart: always
     ports:
-      - "8000:8000"  
+      - "8090:8000"  
     depends_on:
       - database
     environment:
-      - DATABASE_URL=postgresql://postgres:mypassword@database:5432/mydatabase
+      - DATABASE_URL=postgresql://postgres:mypassword@database:8432/mydatabase
     volumes:
       - ./principal:/app      
 
@@ -29,7 +31,7 @@ services:
     image: adminer
     restart: always
     ports:
-      - 8001:8080
+      - 8091:8080
 
 volumes:
   postgres_data:

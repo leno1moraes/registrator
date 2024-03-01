@@ -19,6 +19,7 @@ def create_table():
         CREATE TABLE IF NOT EXISTS registrator (
             id SERIAL PRIMARY KEY,
             ip VARCHAR(15) NOT NULL,
+            descricao VARCHAR(100),
             campus VARCHAR(100) NOT NULL
         )
     """)
@@ -35,10 +36,11 @@ def index(name=None):
 def create_registrator():
     data = request.get_json()
     ip = data['ip']
-    campus = data['campus']
+    descricao = data['descricao']
+    campus = data['campus']    
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("INSERT INTO registrator (ip, campus) VALUES (%s, %s)", (ip, campus))
+    cur.execute("INSERT INTO registrator (ip, descricao, campus) VALUES (%s, %s, %s)", (ip, descricao, campus))
     conn.commit()
     conn.close()
     return jsonify({'message': 'Registro criado com sucesso'}), 201
@@ -51,7 +53,7 @@ def get_all_registrators():
     cur.execute("SELECT * FROM registrator")
     rows = cur.fetchall()
     conn.close()
-    registrators = [{'id': row[0], 'ip': row[1], 'campus': row[2]} for row in rows]
+    registrators = [{'id': row[0], 'ip': row[1], 'descricao': row[2], 'campus': row[3]} for row in rows]
     return jsonify(registrators), 200
 
 # Rota para atualizar um registro existente

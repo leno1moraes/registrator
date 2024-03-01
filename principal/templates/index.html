@@ -24,10 +24,19 @@
                 </div>
             </div>
 
+
+            <div class="col-6 mb-4">
+                <label for="basic-url" class="form-label">Descrição</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="descricao" name="descricao" required aria-describedby="basic-addon3 basic-addon4">
+                </div>
+            </div>            
+
             <div class="col-6 mb-4">
                 <div class="form-floating">
                     <select class="form-select" id="campus" name="campus" required aria-label="Floating label select example">
                         <option selected>Selecionar</option>
+                        <option value="Reitoria">Reitoria</option>
                         <option value="Cuiabá - Octayde Jorge da Silva">Cuiabá - Octayde Jorge da Silva</option>
                         <option value="São Vicente">São Vicente</option>
                         <option value="Cáceres - Professor Olegário Baldo">Cáceres - Professor Olegário Baldo</option>
@@ -63,6 +72,7 @@
             <thead>
                 <tr>
                     <th>Endereço</th>
+                    <th>Descriçao</th>
                     <th>Campus</th>
                     <th></th>
                 </tr>
@@ -85,13 +95,16 @@
 
             // Obter os valores dos campos do formulário
             var ip = document.getElementById('ip').value;
+            var descricao = document.getElementById('descricao').value;
             var campus = document.getElementById('campus').value;
 
             var formData = new FormData(this);
             formData.append('ip', ip);
+            formData.append('descricao', descricao);
             formData.append('campus', campus);
 
             console.log('ip', ip);
+            console.log('descricao', descricao);
             console.log('campus', campus);
 
             fetch('/add', {
@@ -99,6 +112,7 @@
                 method : 'POST',
                 body : JSON.stringify( {  
                         'ip' : ip,
+                        'descricao' : descricao,
                         'campus': campus
                     })
             })
@@ -111,6 +125,7 @@
             .then(data => {
                 alert(data.message);
                 document.getElementById('ip').value = "";
+                document.getElementById('descricao').value = "";
                 document.getElementById('campus').value = "";
                 fetchRegistrations(); // Recarrega a lista de registros
             })
@@ -130,7 +145,8 @@
                 data.forEach(function(registration) {
                     var row = tableBody.insertRow();
                     row.innerHTML = `
-                        <td> <a href="http://${registration.ip}/php/login.php" target="_blank"> ${registration.ip} </td>
+                        <td> <a href="https://${registration.ip}/php/login.php" target="_blank"> ${registration.ip} </td>
+                        <td>${registration.descricao}</td>
                         <td>${registration.campus}</td>
                         <td>                            
                             <i onclick="deleteRegistration(${registration.id})" class="fa-solid fa-trash-can btn-danger" style="color: #e30202;"></i>
